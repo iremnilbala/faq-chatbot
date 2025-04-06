@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";  // useRouter import edildi
 
 export default function Home() {
+  const [questionInput, setQuestionInput] = useState("");
   const [chat, setChat] = useState([
     { from: "bot", text: "Hello! You can type your question below." },
   ]);
-  const [questionInput, setQuestionInput] = useState("");
+  const router = useRouter();  // Router'ı burada tanımlıyoruz
 
   const handleSend = async () => {
     const trimmedQuestion = questionInput.trim();
@@ -45,17 +46,15 @@ export default function Home() {
     setQuestionInput("");
   };
 
+  // Admin login yönlendirme
+  const handleAdminLogin = () => {
+    router.push("/adminlogin");  // Yönlendirme işlemi router.push ile
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col">
       {/* Header */}
       <header className="bg-blue-900 text-white py-4 px-4 flex items-center justify-between shadow">
-        {/* Admin Login */}
-        <div className="text-sm">
-          <Link href="/admin" className="hover:underline text-white font-medium">
-            Admin Login
-          </Link>
-        </div>
-
         {/* Logo */}
         <div className="flex-1 flex justify-center">
           <div className="text-center">
@@ -73,10 +72,18 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="w-[80px]">{/* boşluk için */}</div>
+        {/* Admin Login Button */}
+        <div className="text-sm">
+          <button
+            onClick={handleAdminLogin}  // Butona tıklayınca yönlendirecek
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition ease-in-out duration-300 ml-auto"
+          >
+            Admin Login
+          </button>
+        </div>
       </header>
 
-      {/* Chat area */}
+      {/* Chat Area */}
       <main className="flex-grow overflow-y-auto p-4 sm:p-6">
         <div className="max-w-2xl mx-auto bg-white rounded-xl shadow p-4 sm:p-6 space-y-4 border border-gray-200">
           {chat.map((msg, index) => (
@@ -94,7 +101,7 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Input area */}
+      {/* Input Area */}
       <div className="bg-white border-t border-gray-300 p-4 flex gap-2">
         <input
           type="text"
